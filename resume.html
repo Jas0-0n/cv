@@ -12,6 +12,21 @@
     font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
     overflow: hidden;
   }
+  
+  /* 缩放提示 */
+  .zoom-hint {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 1000;
+    pointer-events: none;
+  }
   body { position: relative; }
 
   /* A4 画布：210mm×297mm @96dpi ≈ 794×1123px */
@@ -222,23 +237,22 @@
   <div class="exp-company-block">
     <div class="company-header">
       <div class="company-name">YOHO HONG KONG LIMITED<span class="ticker">(HKG: 2347)</span></div>
-      <div class="company-period">Sep 2021 - Present</div>
     </div>
 
     <!-- Role 1: Assistant Product Manager (Latest) -->
     <div class="role-item">
       <div class="role-header">
-        <div class="role-title">AI Product Manager / Assistant Product Manager</div>
-        <div class="role-time">Sep 2024 - Present</div>
+        <div class="role-title">Assistant Product Manager (Tech)</div>
+        <div class="role-time">Sep 2024 - Present · 1yr 10mos</div>
       </div>
       <ul class="exp-list">
-        <li>Led the launch of an intelligent customer service agent based on LLM, aligned product scope with the AI engineering team, and delivered a production-ready conversational AI capability that improved service efficiency and reduced manual workload.</li>
-        <li>Improved search relevance and built a recommendation system through academic collaboration, resulting in higher user engagement and conversion.</li>
-        <li>Owned the 3P merchant advertisement platform from ideation to launch, enabling a new revenue stream for the business.</li>
-        <li>Delivered the "flash delivery" feature through cross-functional collaboration with warehouse and logistics teams, enabling faster order fulfillment and improving customer satisfaction.</li>
-        <li>Translated business and user requirements into clear technical specifications, optimized team workflow, and reduced time-to-market.</li>
-        <li>Owned sprint planning, delivery tracking, and QA readiness; created B2B wireframes in Figma, prepared product docs, and conducted stakeholder demos to align teams.</li>
-        <li>Applied data analysis to inform product roadmap decisions and delivered projects on schedule using Jira and Agile methodologies.</li>
+        <li>Led product planning and 0-to-1 delivery for the <b>3P merchant advertisement system</b>, generating 50k+ advertising GMV per month and continuing to grow.</li>
+        <li>Converted business ideas and user requirements into technical solutions, system logic, workflow documentation, and actionable product specifications.</li>
+        <li>Led the revamp of the <b>3P commission mechanism</b> and delivered the <b>Installation Service Booking system</b> from 0 to 1.</li>
+        <li>Led the launch of an <b>AI customer service agent</b> based on LLM, increasing customer service response speed by 40% and reducing manual handoffs by 25%.</li>
+        <li>Applied AI Agents and vibe coding to build MVPs, validate requirements, and accelerate product discovery with the AI engineering team.</li>
+        <li>Analyzed business data to inform product decisions; designed UI/UX prototypes in <b>Figma</b>, owned sprint planning, QA readiness, and stakeholder demos.</li>
+        <li>Served as an AI frontier leader by sharing emerging AI practices, product insights, and implementation opportunities with the team.</li>
       </ul>
     </div>
 
@@ -246,32 +260,31 @@
     <div class="role-item">
       <div class="role-header">
         <div class="role-title">Senior Web Developer</div>
-        <div class="role-time">Sep 2022 - Sep 2024</div>
+        <div class="role-time">Sep 2022 - Sep 2024 · 2yr 0mos</div>
       </div>
       <ul class="exp-list">
-          <li>Introduced <b>Redis</b> caching for high-traffic endpoints, reduced average response latency significantly and improved overall system performance.</li>
-          <li>Designed and implemented <b>Redis pub/sub</b> architecture, enabling efficient real-time event broadcasting across services.</li>
-          <li>Supported backend feature development and conducted regular code review, maintained high code quality and team consistency.</li>
-          <li>Developed <b>Bulk Purchase</b> and <b>Global Redeem</b> business features from design through to production, successfully launched and adopted by business.</li>
-          <li>Led end-to-end development of <b>3P merchant platform</b>, enabled onboarding and growth of third-party seller ecosystem.</li>
-        </ul>
+        <li>Focused on backend development, legacy system revamp and maintenance, supporting large-scale business features from design through production.</li>
+        <li>Designed and implemented <b>Redis caching</b> for high-traffic endpoints, improving system performance and reducing response latency.</li>
+        <li>Built a <b>Redis pub/sub subscription mechanism</b> for efficient real-time event broadcasting across services.</li>
+        <li>Developed <b>Bulk Purchase</b>, <b>Global Redeem</b>, and <b>3P merchant platform</b> features, enabling third-party seller onboarding and business growth.</li>
+        <li>Supported backend feature development, conducted regular <b>code reviews</b>, and maintained code quality and engineering consistency.</li>
+      </ul>
     </div>
 
     <!-- Role 3: Web Developer (Earliest) -->
     <div class="role-item">
       <div class="role-header">
         <div class="role-title">Web Developer</div>
-        <div class="role-time">Sep 2021 - Sep 2022</div>
+        <div class="role-time">Sep 2021 - Sep 2022 · 1yr 0mos</div>
       </div>
       <ul class="exp-list">
-          <li>Completed full revamp of B2C frontend website, delivered a modernized responsive user experience across all devices.</li>
-          <li>Designed and maintained a <b>reusable component library</b>, reduced duplicate code and significantly improved team development efficiency and UI consistency.</li>
-          <li>Implemented <b>Redux</b> for centralized state management, simplified multi-page state logic and reduced state-related bugs.</li>
-          <li>Owned Gift Redeem cart feature end-to-end including UI, input validation and checkout flow, successfully launched and adopted by thousands of users.</li>
-          <li>Refactored real-time inventory calculation algorithm, improved calculation accuracy and cut processing time.</li>
-          <li>Developed automation scripts to replace repetitive manual work across the team, saved multiple working hours per week.</li>
-          <li>Collaborated with product and engineering teams to improve frontend performance and release stability through systematic debugging and optimization.</li>
-        </ul>
+        <li>Led the <b>React</b>-based B2C frontend revamp, delivering a modernized responsive experience across devices.</li>
+        <li>Implemented <b>Redux</b> for centralized state management, simplifying multi-page state logic and reducing state-related bugs.</li>
+        <li>Designed and built a reusable <b>common component library</b>, reducing duplicate code and improving UI consistency and development efficiency.</li>
+        <li>Owned the Gift Redeem cart feature end-to-end, including UI, input validation, and checkout flow.</li>
+        <li>Developed automation scripts to replace repetitive manual work and save multiple working hours per week.</li>
+        <li>Refactored the real-time inventory calculation algorithm and collaborated with product and engineering teams to improve frontend performance and release stability.</li>
+      </ul>
     </div>
   </div>
 
@@ -303,16 +316,67 @@
   </div>
 </div>
 
+<div class="zoom-hint">滚轮缩放 • 拖动画布</div>
+
 <script>
+var canvas = document.getElementById('canvas');
+var currentScale = 1;
+var translateX = 0;
+var translateY = 0;
+var isDragging = false;
+var startX, startY;
+var initialTranslateX, initialTranslateY;
+
+function updateTransform() {
+  canvas.style.transform = 'scale(' + currentScale + ') translate(' + translateX / currentScale + 'px, ' + translateY / currentScale + 'px)';
+}
+
 function fitCanvas() {
-  var canvas = document.getElementById('canvas');
   var sw = window.innerWidth;
   var sh = window.innerHeight;
-  var scale = Math.min(sw / 794, sh / 1123);
-  canvas.style.transform = 'scale(' + scale + ')';
-  canvas.style.left = ((sw - 794 * scale) / 2) + 'px';
-  canvas.style.top = ((sh - 1123 * scale) / 2) + 'px';
+  currentScale = Math.min(sw / 794, sh / 1123);
+  translateX = (sw - 794 * currentScale) / 2;
+  translateY = (sh - 1123 * currentScale) / 2;
+  updateTransform();
 }
+
+// 滚轮缩放
+canvas.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  var delta = e.deltaY > 0 ? -0.1 : 0.1;
+  var newScale = currentScale + delta;
+  currentScale = Math.max(0.25, Math.min(newScale, 3));
+  updateTransform();
+}, { passive: false });
+
+// 开始拖动
+canvas.addEventListener('mousedown', function(e) {
+  isDragging = true;
+  startX = e.clientX;
+  startY = e.clientY;
+  initialTranslateX = translateX;
+  initialTranslateY = translateY;
+  canvas.style.cursor = 'grabbing';
+});
+
+// 拖动中
+window.addEventListener('mousemove', function(e) {
+  if (!isDragging) return;
+  var dx = e.clientX - startX;
+  var dy = e.clientY - startY;
+  translateX = initialTranslateX + dx;
+  translateY = initialTranslateY + dy;
+  updateTransform();
+});
+
+// 结束拖动
+window.addEventListener('mouseup', function() {
+  isDragging = false;
+  canvas.style.cursor = 'grab';
+});
+
+canvas.style.cursor = 'grab';
+
 window.addEventListener('resize', fitCanvas);
 fitCanvas();
 </script>
