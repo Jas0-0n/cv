@@ -10,7 +10,8 @@
     width: 100%; height: 100%;
     background: #e5e5e5;
     font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
   
   /* 缩放提示 */
@@ -30,19 +31,24 @@
   body { position: relative; }
 
   /* A4 画布：210mm×297mm @96dpi ≈ 794×1123px */
+  .canvas-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
   .canvas {
     width: 794px;
     height: 1123px;
     background: #ffffff;
     color: #1a1a1a;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform-origin: top left;
+    transform-origin: top center;
     overflow: hidden;
     padding: 22px 46px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    flex-shrink: 0;
   }
 
   /* ===== 头部 ===== */
@@ -190,7 +196,7 @@
 </head>
 <body>
 
-<div class="canvas" id="canvas">
+<div class="canvas-wrapper"><div class="canvas" id="canvas">
   <!-- 头部 -->
   <div class="header">
     <div class="header-left">
@@ -250,9 +256,8 @@
         <li>Converted business ideas and user requirements into technical solutions, system logic, workflow documentation, and actionable product specifications.</li>
         <li>Led the revamp of the <b>3P commission mechanism</b> and delivered the <b>Installation Service Booking system</b> from 0 to 1.</li>
         <li>Led the launch of an <b>AI customer service agent</b> based on LLM, increasing customer service response speed by 40% and reducing manual handoffs by 25%.</li>
-        <li>Applied AI Agents and vibe coding to build MVPs, validate requirements, and accelerate product discovery with the AI engineering team.</li>
+        <li>Applied <b>AI Agents</b> and rapid prototyping to build MVPs, validate product assumptions, and accelerate product discovery; collaborated closely with the AI engineering team on model selection, prompt design, and evaluation metrics to ensure delivery quality.</li>
         <li>Analyzed business data to inform product decisions; designed UI/UX prototypes in <b>Figma</b>, owned sprint planning, QA readiness, and stakeholder demos.</li>
-        <li>Served as an AI frontier leader by sharing emerging AI practices, product insights, and implementation opportunities with the team.</li>
       </ul>
     </div>
 
@@ -283,7 +288,7 @@
         <li>Designed and built a reusable <b>common component library</b>, reducing duplicate code and improving UI consistency and development efficiency.</li>
         <li>Owned the Gift Redeem cart feature end-to-end, including UI, input validation, and checkout flow.</li>
         <li>Developed automation scripts to replace repetitive manual work and save multiple working hours per week.</li>
-        <li>Refactored the real-time inventory calculation algorithm and collaborated with product and engineering teams to improve frontend performance and release stability.</li>
+        <li>Refactored real-time inventory calculation logic, improving calculation accuracy.</li>
       </ul>
     </div>
   </div>
@@ -314,9 +319,9 @@
     <div class="skill-label">Tools & Methodologies</div>
     <div class="skill-content">Git, Jira, Agile / Scrum, CI/CD, Docker, Automation Scripts, Data Analysis, QA & Testing</div>
   </div>
-</div>
+</div></div>
 
-<div class="zoom-hint">滚轮缩放 • 拖动画布</div>
+<div class="zoom-hint">Ctrl/⌘ + 滚轮缩放 • 拖动画布</div>
 
 <script>
 var canvas = document.getElementById('canvas');
@@ -328,22 +333,22 @@ var startX, startY;
 var initialTranslateX, initialTranslateY;
 
 function updateTransform() {
-  canvas.style.transform = 'scale(' + currentScale + ') translate(' + translateX / currentScale + 'px, ' + translateY / currentScale + 'px)';
+  canvas.style.transform = 'scale(' + currentScale + ') translate(' + translateX + 'px, ' + translateY + 'px)';
 }
 
 function fitCanvas() {
   var sw = window.innerWidth;
-  var sh = window.innerHeight;
-  currentScale = Math.min(sw / 794, sh / 1123);
-  translateX = (sw - 794 * currentScale) / 2;
-  translateY = (sh - 1123 * currentScale) / 2;
+  currentScale = Math.min(sw / 794, 1.5);
+  translateX = 0;
+  translateY = 0;
   updateTransform();
 }
 
-// 滚轮缩放
+// 滚轮：默认上下滚动页面，按住 Ctrl/⌘ 才缩放
 canvas.addEventListener('wheel', function(e) {
+  if (!e.ctrlKey && !e.metaKey) return;
   e.preventDefault();
-  var delta = e.deltaY > 0 ? -0.1 : 0.1;
+  var delta = e.deltaY > 0 ? -0.015 : 0.015;
   var newScale = currentScale + delta;
   currentScale = Math.max(0.25, Math.min(newScale, 3));
   updateTransform();
@@ -378,6 +383,21 @@ window.addEventListener('mouseup', function() {
 canvas.style.cursor = 'grab';
 
 window.addEventListener('resize', fitCanvas);
+
+// 让所有 bullet point 可编辑
+document.querySelectorAll('.exp-list li').forEach(function(li) {
+  li.setAttribute('contenteditable', 'true');
+  li.style.cursor = 'text';
+  li.title = 'Click to edit';
+  li.addEventListener('focus', function() {
+    li.style.background = '#fffde6';
+    li.style.borderRadius = '3px';
+  });
+  li.addEventListener('blur', function() {
+    li.style.background = '';
+    li.style.borderRadius = '';
+  });
+});
 fitCanvas();
 </script>
 
