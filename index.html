@@ -354,8 +354,9 @@ canvas.addEventListener('wheel', function(e) {
   updateTransform();
 }, { passive: false });
 
-// 开始拖动
+// 开始拖动；点击可编辑文字时保留文本编辑和选择行为
 canvas.addEventListener('mousedown', function(e) {
+  if (e.target.closest('[contenteditable="true"]')) return;
   isDragging = true;
   startX = e.clientX;
   startY = e.clientY;
@@ -384,20 +385,32 @@ canvas.style.cursor = 'grab';
 
 window.addEventListener('resize', fitCanvas);
 
-// 让所有 bullet point 可编辑
-document.querySelectorAll('.exp-list li').forEach(function(li) {
-  li.setAttribute('contenteditable', 'true');
-  li.style.cursor = 'text';
-  li.title = 'Click to edit';
-  li.addEventListener('focus', function() {
-    li.style.background = '#fffde6';
-    li.style.borderRadius = '3px';
+// 页面正文全部支持直接编辑；浏览器刷新后不会自动保存修改
+var editableSelectors = [
+  '.name', '.contact-item', '.header-right div',
+  '.section-title', '.edu-degree', '.edu-time', '.edu-detail',
+  '.company-name', '.role-title', '.role-time', '.exp-list li',
+  '.skill-label', '.skill-content'
+];
+
+function enableEditing() {
+  document.querySelectorAll(editableSelectors.join(',')).forEach(function(element) {
+    element.setAttribute('contenteditable', 'true');
+    element.setAttribute('spellcheck', 'false');
+    element.style.cursor = 'text';
+    element.title = 'Click to edit';
+    element.addEventListener('focus', function() {
+      element.style.background = '#fffde6';
+      element.style.borderRadius = '3px';
+    });
+    element.addEventListener('blur', function() {
+      element.style.background = '';
+      element.style.borderRadius = '';
+    });
   });
-  li.addEventListener('blur', function() {
-    li.style.background = '';
-    li.style.borderRadius = '';
-  });
-});
+}
+
+enableEditing();
 fitCanvas();
 </script>
 
