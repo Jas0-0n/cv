@@ -148,6 +148,10 @@
     padding-left: 15px;
     position: relative;
     margin-bottom: 1px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
   .exp-list li::before {
     content: "";
@@ -252,7 +256,7 @@
         <div class="role-time">Sep 2024 - Present · 1yr 10mos</div>
       </div>
       <ul class="exp-list">
-        <li>Led product planning and 0-to-1 delivery for the <b>3P merchant advertisement system</b>, generating 50k+ advertising GMV per month and continuing to grow.</li>
+        <li>Orchestrated a cross-functional team across merchant, engineering, and mkt to launch the 0-to-1 merchant ad system; achieved <b>HK$50k+ monthly ad GMV</b> with <b>14% order volume growth</b> for participating merchants by aligning roadmap decisions around merchant ROI rather than short-term revenue.</li>
         <li>Converted business ideas and user requirements into technical solutions, system logic, workflow documentation, and actionable product specifications.</li>
         <li>Led the revamp of the <b>3P commission mechanism</b> and delivered the <b>Installation Service Booking system</b> from 0 to 1.</li>
         <li>Led the launch of an <b>AI customer service agent</b> based on LLM, increasing customer service response speed by 40% and reducing manual handoffs by 25%.</li>
@@ -409,6 +413,27 @@ function enableEditing() {
     });
   });
 }
+
+// Ctrl/⌘ + B 加粗选中文字
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+    e.preventDefault();
+    document.execCommand('bold');
+  }
+});
+
+// Ctrl/⌘ + Z 撤销
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+    e.preventDefault();
+    document.execCommand('undo');
+  }
+  // Ctrl/⌘ + Shift + Z 重做
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z' && e.shiftKey) {
+    e.preventDefault();
+    document.execCommand('redo');
+  }
+});
 
 enableEditing();
 fitCanvas();
