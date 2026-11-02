@@ -30,6 +30,47 @@
   }
   body { position: relative; }
 
+  /* ===== 保存按钮 & 提示 ===== */
+  .save-bar {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 1001;
+    display: flex;
+    gap: 8px;
+  }
+  #save-btn, #export-btn {
+    color: #fff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 5px;
+    font-size: 12.5px;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  #save-btn { background: #1a1a1a; }
+  #export-btn { background: #1a5fb4; }
+  #save-btn:hover { background: #333; }
+  #export-btn:hover { background: #266dc0; }
+  #save-btn.dirty { background: #c0392b; }
+  #toast {
+    position: fixed;
+    bottom: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    padding: 7px 14px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    z-index: 1002;
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+  }
+  #toast.show { opacity: 1; }
+
   /* A4 画布：210mm×297mm @96dpi ≈ 794×1123px */
   .canvas-wrapper {
     width: 100%;
@@ -189,12 +230,14 @@
   @page { size: A4; margin: 0; }
   @media print {
     html, body { background: #fff; overflow: visible; }
+    .canvas-wrapper { padding: 0; }
     .canvas {
       position: static;
       transform: none;
       width: 210mm;
       height: 297mm;
     }
+    .save-bar, #toast, .zoom-hint { display: none !important; }
   }
 </style>
 </head>
@@ -325,6 +368,12 @@
 
 <div class="zoom-hint">Ctrl/⌘ + 滚轮缩放 • 拖动画布</div>
 
+<div class="save-bar">
+  <button id="save-btn" type="button">Save (⌘S)</button>
+  <button id="export-btn" type="button">Export PDF</button>
+</div>
+<div id="toast"></div>
+
 <script>
 var canvas = document.getElementById('canvas');
 var currentScale = 1;
@@ -431,6 +480,115 @@ document.addEventListener('keydown', function(e) {
     e.preventDefault();
     document.execCommand('redo');
   }
+});
+
+// ===== 保存到源码 =====
+// 把当前 DOM 序列化回干净的 HTML：清掉运行时注入的编辑属性和缩放/拖拽状态，
+// 使写回结果与原始源码格式一致，方便 git diff 查看真实改动。
+var isDirty = false;
+document.addEventListener('input', function() { isDirty = true; updateSaveBtn(); });
+
+function updateSaveBtn() {
+  var btn = document.getElementById('save-btn');
+  btn.textContent = isDirty ? 'Save* (⌘S)' : 'Save (⌘S)';
+  btn.classList.toggle('dirty', isDirty);
+}
+
+function serializeForSave() {
+  var clone = document.documentElement.cloneNode(true);
+  var canvasClone = clone.querySelector('#canvas');
+  if (canvasClone) canvasClone.removeAttribute('style'); // 清除缩放/拖拽 transform
+  // 清除 enableEditing() 注入的属性（contenteditable/spellcheck/title/style）
+  clone.querySelectorAll('[contenteditable]').forEach(function(el) {
+    el.removeAttribute('contenteditable');
+    el.removeAttribute('spellcheck');
+    el.removeAttribute('title');
+    el.removeAttribute('style');
+  });
+  return '<!DOCTYPE html>\n' + clone.outerHTML + '\n';
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(function() { t.classList.remove('show'); }, 2600);
+}
+
+function saveToSource() {
+  return fetch('/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/html; charset=utf-8' },
+    body: serializeForSave()
+  }).then(function(res) {
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    isDirty = false;
+    updateSaveBtn();
+    showToast('✔ 已保存到 index.html，可用 git diff 查看改动');
+  }).catch(function(err) {
+    showToast('✘ 保存失败：' + err.message + '（请先运行 python3 server.py）');
+  });
+}
+
+document.getElementById('save-btn').addEventListener('click', saveToSource);
+
+// ===== 导出 PDF =====
+// 优先走 server 的无头 Chrome 导出（真 A4 PDF，无页眉页脚）；
+// 失败时降级为系统打印对话框（⌘P 选择「存储为 PDF」）。
+// 导出前如有未保存改动，先自动保存，确保导出的是最新版本。
+function exportPdf() {
+  var doExport = function() {
+    showToast('正在生成 PDF…');
+    return fetch('/export-pdf')
+      .then(function(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.blob();
+      })
+      .then(function(blob) {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'Jason_Chen_Resume.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function() { URL.revokeObjectURL(a.href); }, 5000);
+        showToast('✔ PDF 已生成并开始下载');
+      })
+      .catch(function() {
+        showToast('⚠ 无头导出不可用，已打开系统打印（⌘P 选「存储为 PDF」）');
+        window.print();
+      });
+  };
+  if (isDirty) {
+    return saveToSource().then(doExport);
+  }
+  return doExport();
+}
+
+document.getElementById('export-btn').addEventListener('click', exportPdf);
+
+// Ctrl/⌘ + E 导出 PDF
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+    e.preventDefault();
+    exportPdf();
+  }
+});
+
+// Ctrl/⌘ + S 保存
+document.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    saveToSource();
+  }
+});
+
+// 有未保存改动时，刷新/关闭前提示
+window.addEventListener('beforeunload', function(e) {
+  if (!isDirty) return;
+  e.preventDefault();
+  e.returnValue = '';
 });
 
 enableEditing();
